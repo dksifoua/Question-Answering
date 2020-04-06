@@ -1,7 +1,8 @@
 import os
 from utils import *
 
-class ThreadRanker(object):
+class ThreadRanker:
+    
     def __init__(self, resource_paths):
         self.word_embeddings, self.embeddings_dim = load_embeddings()
         self.thread_embeddings_folder = resource_paths['THREAD_EMBEDDINGS_FOLDER']

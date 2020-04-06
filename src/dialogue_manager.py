@@ -1,9 +1,10 @@
-from chatterbot import ChatBot
-from chatterbot.trainers import ChatterBotCorpusTrainer
+# from chatterbot import ChatBot
+# from chatterbot.trainers import ChatterBotCorpusTrainer
 
 from src.utils import *
 
-class SimpleDialogueManager(object):
+
+class SimpleDialogueManager:
     """
     This is the simplest dialogue manager to test the telegram bot.
     Your task is to create a more advanced one in dialogue_manager.py."
@@ -13,7 +14,8 @@ class SimpleDialogueManager(object):
         return "Hello, world!"
     
 
-class DialogueManager(object):
+class DialogueManager:
+
     def __init__(self, resource_paths):
         print("Loading resources...")
 
@@ -32,11 +34,12 @@ class DialogueManager(object):
     def create_chitchat_bot(self):
         """Initializes self.chitchat_bot with some conversational model."""
 
-        chatbot = ChatBot('Nannan')
-        trainer = ChatterBotCorpusTrainer(chatbot)
-        trainer.train('chatterbot.corpus.english')
+        # chatbot = ChatBot('Nannan')
+        # trainer = ChatterBotCorpusTrainer(chatbot)
+        # trainer.train('chatterbot.corpus.english')
 
-        self.chitchat_bot = chatbot
+        # self.chitchat_bot = chatbot
+        pass
        
     def generate_answer(self, question):
         """Combines stackoverflow and chitchat parts using intent recognition."""

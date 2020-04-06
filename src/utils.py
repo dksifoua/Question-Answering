@@ -6,8 +6,6 @@ import numpy as np
 nltk.download('stopwords')
 from nltk.corpus import stopwords
 
-from gensim.models import KeyedVectors
-
 # Paths for all resources for the bot.
 RESOURCE_PATH = {
     'INTENT_RECOGNIZER': './src/notebooks/out/intent_recognizer.pkl',

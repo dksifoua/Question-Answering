@@ -1,7 +1,7 @@
 import time
 import argparse
 from src.bot_handler import BotHandler
-from src.dialogue_manager import DialogueManager
+from src.dialogue_manager import SimpleDialogueManager
 from src.utils import RESOURCE_PATH
 
 def parse_args():
@@ -22,19 +22,10 @@ def main():
             print("Please, set bot token through --token or TELEGRAM_TOKEN env variable")
             return
         token = os.environ["TELEGRAM_TOKEN"]
-
-    #################################################################
     
-    # Your task is to complete dialogue_manager.py and use your 
-    # advanced DialogueManager instead of SimpleDialogueManager. 
-    
-    # This is the point where you plug it into the Telegram bot. 
-    # Do not forget to import all needed dependencies when you do so.
-    
-    manager = DialogueManager(RESOURCE_PATH)
+    # manager = DialogueManager(RESOURCE_PATH)
+    manager = SimpleDialogueManager()
     bot = BotHandler(token, manager)
-    
-    ###############################################################
 
     print("Ready to talk!")
     offset = 0
