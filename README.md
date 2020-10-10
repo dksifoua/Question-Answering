@@ -1,6 +1,15 @@
-# Question Answering
+# Question Answering - QA
 
 Question-Answering is a classical problem in natural language processing, which aims at designing systems that can automatically answer a question, in the same way as human does.
+
+In this repo, I implemented end-to-end neural networks model which aims to answer questions from a given passage.
+
+## TODO
+
+- [ ] DrQA
+- [ ] BiDAF
+- [ ] QANet
+- [ ] RNet
 
 ## References
 
