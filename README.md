@@ -13,4 +13,5 @@ In this repo, I implemented end-to-end neural networks model which aims to answe
 
 ## References
 
+- [0] Chen, D., Bolton, J., & Manning, C. D. (2016). A thorough examination of the cnn/daily mail reading comprehension task. arXiv preprint arXiv:1606.02858.
 - [1] Chen, D., Fisch, A., Weston, J., & Bordes, A. (2017). Reading wikipedia to answer open-domain questions. arXiv preprint arXiv:1704.00051.
