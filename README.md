@@ -6,7 +6,7 @@ In this repo, I implemented end-to-end neural networks model which aims to answe
 
 ## TODO
 
-- [ ] DrQA
+- [x] DrQA
 - [ ] BiDAF
 - [ ] QANet
 - [ ] RNet
