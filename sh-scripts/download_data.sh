@@ -4,6 +4,7 @@ data_dir=./data
 train_squad_data_name=train-v1.1.json
 valid_squad_data_name=dev-v1.1.json
 pretrained_glove_data_name=glove.840B.300d.zip
+pretrained_glove_data_extracted_name=glove.840B.300d.txt
 
 if [ ! -e $data_dir ];
 then
@@ -46,6 +47,12 @@ else
   echo "==========>>>>>>>>>> Pretrained GloVe embeddings [$pretrained_glove_file] already exists!!"
 fi
 
+pretrained_glove_data_extracted_file=$data_dir/$pretrained_glove_data_extracted_name
+if [ ! -e $pretrained_glove_data_extracted_file ];
+then
   unzip -q $pretrained_glove_file -d $data_dir
   # rm -r $pretrained_glove_file
-  echo "==========>>>>>>>>>> Extracted pretrained GloVe embeddings from its zip archive."
+  echo "==========>>>>>>>>>> Extracted pretrained GloVe embeddings from its zip archive to [$pretrained_glove_data_extracted_file]."
+else
+  echo "==========>>>>>>>>>> Pretrained GloVe embeddings [$pretrained_glove_data_extracted_file] has already extracted!!"
+fi
