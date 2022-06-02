@@ -1,0 +1,13 @@
+name: question-answering
+channels:
+  - defaults
+dependencies:
+  - python=3.7
+  - torchaudio
+  - pytorch
+  - torchvision
+  - cudatoolkit=11.3
+  - spacy
+  - cupy
+  - jupyter
+prefix: C:\Users\Dimitri\anaconda3\envs\question-answering
