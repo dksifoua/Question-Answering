@@ -39,7 +39,7 @@ def add_targets_to_squad_v1_data(qas: List[SquadV1DataItem]) -> None:
 
 
 def is_bad_item(qa: SquadV1DataItem) -> bool:
-    """Return True if either the target is None or target indexes don't match the answer"""
+    """Return True if either the target is None or target indexes don't match the answer. Return False otherwise"""
     if qa.target is None:
         return False
     return qa.answer.text == qa.context[qa.target.start_index:qa.target.end_index + 1].text
