@@ -4,7 +4,7 @@ import collections
 from spacy.tokens import Token
 from typing import Dict, List
 
-from question_answering.domain import SquadV1DataItem, Target
+from question_answering.domain import SquadV1DataItem, Target, TokenFeature
 
 
 def parse_squad_v1_data(data: Dict, spacy_nlp: spacy.language.Language) -> List[SquadV1DataItem]:
@@ -61,11 +61,11 @@ def add_extra_features_squad_v1(qas: List[SquadV1DataItem]) -> None:
             frequency_context_tokens[index] = count_context_tokens[token.text.lower()]
         norm_frequency_context_tokens = sum(frequency_context_tokens.values())
 
-        qa.token_feature.exact_match = [qa.context[index].text.lower() in question for index in range(len(qa.context))]
-        qa.token_feature.part_of_speech = [qa.context[index].tag_ in question for index in range(len(qa.context))]
-        qa.token_feature.named_entity_type = [
-            qa.context[index].ent_type_ in question for index in range(len(qa.context))
-        ]
-        qa.token_feature.normalized_term_frequency = [
-            frequency_context_tokens[index] / norm_frequency_context_tokens for index in range(len(qa.context))
-        ]
+        qa.token_feature = TokenFeature(
+            exact_match=[qa.context[index].text.lower() in question for index in range(len(qa.context))],
+            part_of_speech=[qa.context[index].tag_ for index in range(len(qa.context))],
+            named_entity_type=[qa.context[index].ent_type_ for index in range(len(qa.context))],
+            normalized_term_frequency=[
+                frequency_context_tokens[index] / norm_frequency_context_tokens for index in range(len(qa.context))
+            ]
+        )
