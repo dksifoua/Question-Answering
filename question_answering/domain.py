@@ -3,13 +3,17 @@ from typing import List, NamedTuple
 
 from spacy.tokens import Doc
 
-Target = NamedTuple("Target", [("start_index", int), ("end_index", int)])
-TokenFeature = NamedTuple("TokenFeature", [
-    ("exact_match", List[bool]),
-    ("part_of_speech", List[str]),
-    ("named_entity_type", List[str]),
-    ("normalized_term_frequency", List[float])
-])
+
+class Target(NamedTuple):
+    start_index: int
+    end_index: int
+
+
+class TokenFeature(NamedTuple):
+    exact_match: List[bool]
+    part_of_speech: List[str]
+    named_entity_type: List[str]
+    normalized_term_frequency: List[float]
 
 
 @dataclasses.dataclass
