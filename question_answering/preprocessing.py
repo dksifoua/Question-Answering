@@ -4,7 +4,7 @@ import collections
 from spacy.tokens import Token
 from typing import Dict, List
 
-from question_answering.domain import SquadV1DataItem, Target, TokenFeature
+from question_answering.drqa.domain import SquadV1DataItem, Target, TokenFeature
 
 
 def parse_squad_v1_data(data: Dict, spacy_nlp: spacy.language.Language) -> List[SquadV1DataItem]:

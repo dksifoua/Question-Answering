@@ -1,3 +1,4 @@
+import torch
 import dataclasses
 from typing import List, NamedTuple
 
@@ -25,3 +26,13 @@ class SquadV1DataItem:
     answer_start_index: int
     target: Target = None
     token_feature: TokenFeature = None
+
+
+class SquadV1DatasetItem(NamedTuple):
+    context: torch.LongTensor
+    question: torch.LongTensor
+    target: torch.LongTensor
+    exact_match: torch.LongTensor
+    part_of_speech: torch.LongTensor
+    named_entity_type: torch.LongTensor
+    normalized_term_frequency: torch.FloatTensor
