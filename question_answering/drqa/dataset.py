@@ -72,8 +72,8 @@ def add_padding(batch: List[SquadV1DatasetItem], pad_token: str, text_vocab: Voc
     batch_padded_normalized_term_frequency = pad_sequence(batch_normalized_term_frequency,
                                                           batch_first=True).to(device)
     return SquadV1DatasetItem(
-        context=(batch_padded_context, length_context) if include_lengths else batch_padded_context,
-        question=(batch_padded_question, length_question) if include_lengths else batch_padded_question,
+        context=(batch_padded_context, length_context),
+        question=(batch_padded_question, length_question),
         target=batch_padded_target,
         exact_match=batch_padded_exact_match,
         part_of_speech=batch_padded_part_of_speech,

@@ -45,7 +45,7 @@ class Vocabulary:
         Return the index of the word in the vocabulary.
         Return the index of the unknown token if that word doesn't exist in the vocabulary.
         """
-        return self.word2index.get(str(word), self.word2index[self.unknown_token])
+        return self.word2index.get(word, self.word2index[self.unknown_token])
 
     def itos(self, index: int) -> str:
         """Return the word of the index in the vocabulary."""

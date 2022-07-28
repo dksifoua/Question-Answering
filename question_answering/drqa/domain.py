@@ -1,6 +1,6 @@
 import torch
 import dataclasses
-from typing import List, NamedTuple
+from typing import List, NamedTuple, Tuple, Union
 
 from spacy.tokens import Doc
 
@@ -29,8 +29,8 @@ class SquadV1DataItem:
 
 
 class SquadV1DatasetItem(NamedTuple):
-    context: torch.LongTensor
-    question: torch.LongTensor
+    context: Union[torch.LongTensor, Tuple[torch.LongTensor, torch.LongTensor]]
+    question: Union[torch.LongTensor, Tuple[torch.LongTensor, torch.LongTensor]]
     target: torch.LongTensor
     exact_match: torch.LongTensor
     part_of_speech: torch.LongTensor
