@@ -1,3 +1,2 @@
+from .aligned_question_embedding_layer import AlignedQuestionEmbeddingLayer
 from .stacked_bidirectional_lstm_layer import StackedBiLSTMsLayer
-
-__all__ = ["StackedBiLSTMsLayer"]
