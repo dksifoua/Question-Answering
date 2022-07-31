@@ -1,0 +1,4 @@
+spacy==3.3.0
+tqdm==4.64.0
+
+dataclasses==0.8
