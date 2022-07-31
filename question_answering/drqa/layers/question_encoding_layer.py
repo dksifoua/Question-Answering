@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+from torch import Tensor
 import torch.nn.functional as F
 from question_answering.drqa.layers import StackedBiLSTMsLayer
 
@@ -30,7 +31,7 @@ class QuestionEncodingLayer(nn.Module):
         )
         self.dense = nn.Linear(in_features=embedding_size, out_features=1, bias=False)
 
-    def __linear_self_attention(self, question_embedded: torch.Tensor, question_mask: torch.Tensor) -> torch.Tensor:
+    def __linear_self_attention(self, question_embedded: Tensor, question_mask: Tensor) -> Tensor:
         """
         :param question_embedded: FloatTensor[batch_size, qst_seq_len, embedding_size]
         :param question_mask: Mask of question regarding if it is a padding token or not.
@@ -41,8 +42,7 @@ class QuestionEncodingLayer(nn.Module):
         scores = scores.masked_fill(question_mask == 0, float("-inf"))
         return F.softmax(scores, dim=-1)
 
-    def forward(self, question_embedded: torch.Tensor, question_lengths: torch.Tensor, question_mask: torch.Tensor) \
-            -> torch.Tensor:
+    def forward(self, question_embedded: Tensor, question_lengths: Tensor, question_mask: Tensor) -> Tensor:
         """
         :param question_embedded: FloatTensor[batch_size, qst_seq_len, embedding_size]
         :param question_lengths: Sequence question lengths. LongTensor[batch_size,]

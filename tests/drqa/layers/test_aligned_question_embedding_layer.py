@@ -10,8 +10,10 @@ class TestAlignedQuestionEmbeddingLayer(unittest.TestCase):
         self.embedding_size = 300
         self.hidden_size = 128
 
-        self.aligned_question_embedding_layer = AlignedQuestionEmbeddingLayer(embedding_size=self.embedding_size,
-                                                                              hidden_size=self.hidden_size)
+        self.aligned_question_embedding_layer = AlignedQuestionEmbeddingLayer(
+            embedding_size=self.embedding_size,
+            hidden_size=self.hidden_size
+        )
 
     def test_forward(self):
         batch_size, ctx_seq_len, qst_seq_len = 64, 50, 20

@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+from torch import Tensor
 import torch.nn.functional as F
 
 
@@ -24,8 +25,7 @@ class AlignedQuestionEmbeddingLayer(nn.Module):
 
         self.dense = nn.Linear(in_features=embedding_size, out_features=hidden_size)
 
-    def forward(self, context_sequence: torch.Tensor, question_sequence: torch.Tensor, question_mask: torch.Tensor) \
-            -> torch.Tensor:
+    def forward(self, context_sequence: Tensor, question_sequence: Tensor, question_mask: Tensor) -> Tensor:
         """
         :param context_sequence: Sequence context inputs. FloatTensor[batch_size, ctx_seq_len, embedding_size]
         :param question_sequence: Sequence question inputs. FloatTensor[batch_size, qst_seq_len, embedding_size]

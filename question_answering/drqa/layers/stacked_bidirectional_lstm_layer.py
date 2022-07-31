@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+from torch import Tensor
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 from typing import Tuple
 
@@ -29,8 +30,7 @@ class StackedBiLSTMsLayer(nn.Module):
             ) for i in range(n_layers)
         ])
 
-    def __forward_lstm(self, layer: nn.Module, inputs: torch.Tensor, lengths: torch.Tensor) \
-            -> Tuple[torch.Tensor, torch.Tensor]:
+    def __forward_lstm(self, layer: nn.Module, inputs: Tensor, lengths: Tensor) -> Tuple[Tensor, Tensor]:
         """
         :param layer: LSTM layer.
         :param inputs: Sequence inputs. FloatTensor[batch_size, max_sequence_length, embedding_size|hidden_size * 2]
@@ -45,7 +45,7 @@ class StackedBiLSTMsLayer(nn.Module):
         padded_outputs, outputs_lengths = pad_packed_sequence(sequence=packed_outputs, batch_first=True)
         return padded_outputs, outputs_lengths
 
-    def forward(self, embedded_inputs: torch.Tensor, sequence_lengths: torch.Tensor) -> torch.Tensor:
+    def forward(self, embedded_inputs: Tensor, sequence_lengths: Tensor) -> Tensor:
         """
         :param embedded_inputs: Sequence inputs. FloatTensor[batch_size, max_sequence_length, embedding_size]
         :param sequence_lengths: Sequence lengths. LongTensor[batch_size,]
