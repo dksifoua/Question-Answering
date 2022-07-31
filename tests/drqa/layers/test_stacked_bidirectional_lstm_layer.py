@@ -20,17 +20,11 @@ class TestStackedBiLSTMsLayer(unittest.TestCase):
                                     n_layers=self.n_layers, dropout=1)
 
     def test_forward(self):
-        max_sequence_length, batch_size = 50, 32
-        with self.assertRaises(ValueError):
-            _ = self.stack_bilstms_layer(
-                embedded_inputs=torch.randn(size=(batch_size, max_sequence_length, self.embedding_size)),
-                sequence_lengths=torch.randint(low=1, high=max_sequence_length, size=(batch_size + 1,))
-            )
-
+        sequence_length, batch_size = 50, 32
         bilstm_outputs = self.stack_bilstms_layer(
-            embedded_inputs=torch.randn(size=(batch_size, max_sequence_length, self.embedding_size)),
-            sequence_lengths=torch.randint(low=1, high=max_sequence_length + 1, size=(batch_size,))
+            embedded_inputs=torch.randn(size=(batch_size, sequence_length, self.embedding_size)),
+            sequence_lengths=torch.randint(low=1, high=sequence_length + 1, size=(batch_size,))
         )
         self.assertEqual(
-            bilstm_outputs.size(), torch.Size([batch_size, max_sequence_length, self.n_layers * self.hidden_size * 2])
+            bilstm_outputs.size(), torch.Size([batch_size, sequence_length, self.n_layers * self.hidden_size * 2])
         )

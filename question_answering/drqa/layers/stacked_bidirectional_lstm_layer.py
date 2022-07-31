@@ -51,9 +51,6 @@ class StackedBiLSTMsLayer(nn.Module):
         :param sequence_lengths: Sequence lengths. LongTensor[batch_size,]
         :return: FloatTensor[batch_size, sequence_lengths, n_layers * hidden_size * 2]
         """
-        if embedded_inputs.size()[0] != sequence_lengths.size()[0]:
-            raise ValueError("Batch sizes (1st dimension) of inputs must match")
-
         outputs, lens = [embedded_inputs], sequence_lengths
         for lstm_layer in self.lstm_layers:
             out, lens = self.__forward_lstm(layer=lstm_layer, inputs=outputs[-1], lengths=lens)
