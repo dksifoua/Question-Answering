@@ -44,7 +44,7 @@ class DrQA(nn.Module):
             hidden_size=hidden_size
         )
         self.context_lstm_layer = StackedBiLSTMsLayer(
-            embedding_size=embedding_size * 2 + n_extra_features,
+            embedding_size=embedding_size + hidden_size + n_extra_features,
             hidden_size=hidden_size,
             n_layers=n_layers,
             dropout=dropout
@@ -115,7 +115,7 @@ class DrQA(nn.Module):
         context_inputs = torch.cat([
             context_aligned, context_embedded, exact_matches.unsqueeze(-1), part_of_speeches.unsqueeze(-1),
             named_entity_types.unsqueeze(-1), normalized_term_frequencies.unsqueeze(-1)
-        ], dim=-1)  # [batch_size, ctx_seq_len, embedding_size * 2 + 4]
+        ], dim=-1)  # [batch_size, ctx_seq_len, embedding_size + hidden_size + 4]
 
         context_encoded = self.context_lstm_layer(
             embedded_inputs=context_inputs,
