@@ -2,7 +2,7 @@ PIP := $(shell which pip)
 PYTHON := $(shell which python)
 
 install: requirements.txt
-	pip install -r requirements.txt
+	$(PIP) install -r requirements.txt
 
 download_data:
 	./sh-scripts/download_data.sh
