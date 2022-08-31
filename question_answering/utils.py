@@ -42,3 +42,7 @@ def max_metrics_over_ground_truths(prediction: str, ground_truths: List[str]) ->
     em_score = max(scores, key=lambda score: score[0])[0]
     f1_score = max(scores, key=lambda score: score[1])[1]
     return em_score, f1_score
+
+
+def metrics(predictions: dict, qas) -> Tuple[float, float]:
+    pass

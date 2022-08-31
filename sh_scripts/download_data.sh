@@ -6,14 +6,6 @@ valid_squad_data_name=dev-v1.1.json
 pretrained_glove_data_name=glove.840B.300d.zip
 pretrained_glove_data_extracted_name=glove.840B.300d.txt
 
-if [ ! -e $data_dir ];
-then
-  mkdir $data_dir
-  echo "==========>>>>>>>>>> Data directory [$data_dir] created!"
-else
-  echo "==========>>>>>>>>>> Data directory [$data_dir] already exists!!"
-fi
-
 train_data_file=$data_dir/$train_squad_data_name
 if [ ! -e $train_data_file ];
 then
