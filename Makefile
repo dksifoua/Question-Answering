@@ -7,7 +7,7 @@ install: requirements.txt
 download_data:
 	./sh-scripts/download_data.sh
 
-setup_spacy_model:
+download_spacy_model:
 	$(PYTHON) -m spacy download en_core_web_lg
 
 test:
