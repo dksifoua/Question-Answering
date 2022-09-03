@@ -1,7 +1,9 @@
 import re
 import string
 import collections
-from typing import List, Tuple
+from typing import Dict, List, Tuple
+
+from question_answering.domain import RawDatasetItem
 
 
 def normalize(answer: str) -> str:
@@ -27,11 +29,11 @@ def get_scores(prediction: str, ground_truth: str) -> Tuple[float, float]:
     prediction_tokens, ground_truth_tokens = prediction.split(), ground_truth.split()
 
     common = collections.Counter(prediction_tokens) & collections.Counter(ground_truth_tokens)
-    num_same = sum(common.values())
+    number_same = sum(common.values())
     f1_score = 0
-    if num_same != 0:
-        precision = 1.0 * num_same / len(prediction_tokens)
-        recall = 1.0 * num_same / len(ground_truth_tokens)
+    if number_same != 0:
+        precision = 1.0 * number_same / len(prediction_tokens)
+        recall = 1.0 * number_same / len(ground_truth_tokens)
         f1_score = (2 * precision * recall) / (precision + recall)
 
     return prediction == ground_truth, f1_score
@@ -42,3 +44,44 @@ def max_metrics_over_ground_truths(prediction: str, ground_truths: List[str]) ->
     em_score = max(scores, key=lambda score: score[0])[0]
     f1_score = max(scores, key=lambda score: score[1])[1]
     return em_score, f1_score
+
+
+def metrics(predictions: Dict[str, str], qas: List[RawDatasetItem]) -> Tuple[float, float]:
+    ground_truths = collections.defaultdict(lambda: [])
+    for qa in qas:
+        if qa.id_ in predictions:
+            ground_truths[qa.id_].append(qa.answer.text)
+
+    em_scores, f1_scores, total = [], [], 0
+    for id_ in predictions:
+        em_score, f1_score = max_metrics_over_ground_truths(predictions[id_], ground_truths[id_])
+        em_scores.append(em_score)
+        f1_scores.append(f1_score)
+        total += 1
+
+    em_score = 100.0 * sum(em_scores) / total
+    f1_score = 100.0 * sum(f1_scores) / total
+    return em_score, f1_score
+
+
+class AverageMeter:
+    # TODO
+    #  Add typing
+
+    def __init__(self):
+        self.value = 0.
+        self.sum = 0.
+        self.count = 0
+        self.average = 0.
+
+    def reset(self):
+        self.value = 0.
+        self.sum = 0.
+        self.count = 0
+        self.average = 0.
+
+    def update(self, value, n=1):
+        self.value = value
+        self.sum += value * n
+        self.count += n
+        self.average = self.sum / self.count

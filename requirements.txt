@@ -1,4 +1,4 @@
-spacy==3.3.0
+numpy==1.21.6
+spacy==3.4.1
+torch==1.12.1
 tqdm==4.64.0
-
-dataclasses==0.8
