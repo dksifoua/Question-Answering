@@ -1,3 +1,5 @@
+.PHONY: tests
+
 PIP := $(shell which pip)
 PYTHON := $(shell which python)
 
@@ -10,5 +12,5 @@ download_data:
 download_spacy_model:
 	$(PYTHON) -m spacy download en_core_web_lg
 
-test:
+tests:
 	$(PYTHON) -m unittest
