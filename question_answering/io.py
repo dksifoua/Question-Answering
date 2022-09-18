@@ -1,7 +1,8 @@
 import json
 import tqdm
+import pickle
 import numpy as np
-from typing import Dict
+from typing import Any, Dict
 
 
 def load_squad_v1_data(path: str) -> Dict:
@@ -22,3 +23,11 @@ def load_glove_embeddings(path: str) -> Dict[str, np.ndarray]:
         return glove_embeddings
     except IOError:
         raise IOError
+
+
+def save_processed_data(data: Any, path: str) -> None:
+    try:
+        with open(path, mode="wb") as file:
+            pickle.dump(data, file)
+    except IOError as error:
+        print(f"Error occurred while saving data: {error}")

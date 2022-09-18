@@ -12,5 +12,8 @@ download_data:
 download_spacy_model:
 	$(PYTHON) -m spacy download en_core_web_lg
 
+drqa_process_data:
+	$(PYTHON) -m py_scripts.drqa.process_data
+
 tests:
 	$(PYTHON) -m unittest
