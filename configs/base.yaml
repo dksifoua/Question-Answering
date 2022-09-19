@@ -1,0 +1,15 @@
+seed: 542
+data:
+  raw:
+    train_path: ./data/train-v1.1.json
+    valid_path: ./data/dev-v1.1.json
+  processed:
+    drqa:
+      train_path: ./data/drqa_processed_train_data.dat
+      valid_path: ./data/drqa_processed_valid_data.dat
+vocabulary:
+  padding_token: <pad>
+  unknown_token: <unk>
+  min_frequency: 5
+  drqa:
+    path: ./data/drqa_{}_vocabulary.dat

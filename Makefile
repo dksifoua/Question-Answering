@@ -15,5 +15,8 @@ download_spacy_model:
 drqa_process_data:
 	$(PYTHON) -m py_scripts.drqa.process_data
 
+drqa_build_vocabulary:
+	$(PYTHON) -m py_scripts.drqa.build_vocabulary
+
 tests:
 	$(PYTHON) -m unittest

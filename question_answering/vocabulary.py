@@ -3,6 +3,8 @@ from typing import Dict, List, Union
 
 from spacy.tokens import Doc
 
+from .io import IO
+
 
 class Vocabulary:
 
@@ -50,3 +52,6 @@ class Vocabulary:
     def itos(self, index: int) -> str:
         """Return the word of the index in the vocabulary."""
         return self.index2word[index]
+
+    def save(self, path: str) -> None:
+        IO.save_to_pickle(data=self, path=path)

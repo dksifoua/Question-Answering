@@ -17,13 +17,13 @@ class IO:
 
     @staticmethod
     def load_glove_embeddings(path: str) -> Dict[str, np.ndarray]:
-        glove_embeddings = {}
         try:
-            file = open(path, mode='r', encoding="utf-8")
-            for line in tqdm.tqdm(file):
-                values = line.split(' ')
-                glove_embeddings[values[0]] = np.asarray(values[1:], dtype="float32")
-            return glove_embeddings
+            with open(path, mode='r', encoding="utf-8") as file:
+                glove_embeddings = {}
+                for line in tqdm.tqdm(file):
+                    values = line.split(' ')
+                    glove_embeddings[values[0]] = np.asarray(values[1:], dtype="float32")
+                return glove_embeddings
         except IOError:
             raise IOError
 
@@ -31,7 +31,7 @@ class IO:
     def save_to_pickle(data: Any, path: str) -> None:
         try:
             with open(path, mode="wb") as file:
-                pickle.dump(data, file)
+                pickle.dump(data, file, protocol=pickle.HIGHEST_PROTOCOL)
         except IOError:
             raise IOError
 
