@@ -1,7 +1,7 @@
 import spacy
 import random
 
-from question_answering.io import load_squad_v1_data, save_processed_data
+from question_answering.io import IO
 from question_answering.preprocessing import add_extra_features_squad_v1, add_targets_to_squad_v1_data, is_bad_item, \
     parse_squad_v1_data, test_answer_start_indexes, test_targets
 
@@ -10,8 +10,8 @@ if __name__ == "__main__":
     language = spacy.load("en_core_web_lg")
 
     print("Loading data...")
-    train_raw_data = load_squad_v1_data(path="./data/train-v1.1.json")
-    valid_raw_data = load_squad_v1_data(path="./data/dev-v1.1.json")
+    train_raw_data = IO.load_from_json(path="./data/train-v1.1.json")
+    valid_raw_data = IO.load_from_json(path="./data/dev-v1.1.json")
     print("Length of raw train data: {:,}".format(len(train_raw_data["data"])))
     print("Length of raw valid data: {:,}".format(len(valid_raw_data["data"])))
     print("Loading data... ok")
@@ -54,5 +54,6 @@ if __name__ == "__main__":
     print("Adding extra features... ok")
 
     print("Saving processed data...")
-    save_processed_data(data=train_qas, path="./data/drqa_processed_data.dat")
+    IO.save_to_pickle(data=train_qas, path="./data/drqa_processed_train_data.dat")
+    IO.save_to_pickle(data=train_qas, path="./data/drqa_processed_valid_data.dat")
     print("Saving processed data... ok")
