@@ -2,6 +2,7 @@ import re
 import torch
 import random
 import string
+import warnings
 import collections
 import numpy as np
 from typing import Dict, List, Tuple
@@ -9,7 +10,13 @@ from typing import Dict, List, Tuple
 from question_answering.domain import RawDatasetItem
 
 
-def seed_everything(seed: int):
+def ignore_warnings() -> None:
+    warnings.simplefilter(action="ignore", category=UserWarning)
+    warnings.simplefilter(action="ignore", category=FutureWarning)
+    warnings.simplefilter(action="ignore", category=DeprecationWarning)
+
+
+def seed_everything(seed: int) -> None:
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)

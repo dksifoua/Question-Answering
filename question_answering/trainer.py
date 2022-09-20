@@ -14,8 +14,8 @@ from .vocabulary import Vocabulary
 
 class Trainer:
 
-    def __int__(self, model: nn.Module, optimizer: optim.Optimizer, criterion: nn.Module, id_vocab: Vocabulary,
-                text_vocab: Vocabulary, model_path: str):
+    def __init__(self, model: nn.Module, optimizer: optim.Optimizer, criterion: nn.Module, id_vocab: Vocabulary,
+                 text_vocab: Vocabulary, model_path: str):
         self.model = model
         self.optimizer = optimizer
         self.criterion = criterion
@@ -52,7 +52,7 @@ class Trainer:
                                                                   ends=F.softmax(ends, dim=-1))
                 for index in range(starts.size(0)):
                     # TODO
-                    #  Add id to data
+                    #  Add id_ to data
                     id_ = self.id_vocab.itos(batch.id_[index].item())
                     prediction = batch.context[0][index][start_indexes[index]:end_indexes[index] + 1]
                     predictions[id_] = ' '.join([self.text_vocab.itos(ind.item()) for ind in prediction])
@@ -75,3 +75,11 @@ class Trainer:
                 best_loss = valid_loss
                 torch.save(self.model.state_dict(), self.model_path)
         return history
+
+    @staticmethod
+    def build_datasets():
+        raise NotImplementedError
+
+    @staticmethod
+    def build_dataloaders():
+        raise NotImplementedError

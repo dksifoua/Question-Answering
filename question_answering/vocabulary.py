@@ -55,3 +55,7 @@ class Vocabulary:
 
     def save(self, path: str) -> None:
         IO.save_to_pickle(data=self, path=path)
+
+    @staticmethod
+    def load(path: str) -> "Vocabulary":
+        return IO.load_from_pickle(path=path)
