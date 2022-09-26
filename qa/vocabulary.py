@@ -58,4 +58,4 @@ class Vocabulary:
 
     @staticmethod
     def load(path: str) -> "Vocabulary":
-        return IO.load_from_pickle(path=path)
+        return IO.load_from_pickle(path=path, return_type=Vocabulary)

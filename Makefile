@@ -18,5 +18,8 @@ drqa_process_data:
 drqa_build_vocabulary:
 	$(PYTHON) -m py_scripts.drqa.build_vocabulary
 
+drqa_train_model:
+	$(PYTHON) -m py_scripts.drqa.train_model
+
 tests:
 	$(PYTHON) -m unittest

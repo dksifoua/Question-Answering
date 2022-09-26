@@ -1,10 +1,10 @@
 import argparse
 import itertools
 
-from question_answering.io import IO
-from question_answering.domain import *
-from question_answering.vocabulary import Vocabulary
-from question_answering.configuration import Configuration
+from qa.io import IO
+from qa.domain import *
+from qa.vocabulary import Vocabulary
+from qa.configuration import Configuration
 
 
 if __name__ == "__main__":
@@ -50,8 +50,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     print("Loading processed data...")
-    train_qas = IO.load_from_pickle(path=args.train_processed_data_path)
-    valid_qas = IO.load_from_pickle(path=args.valid_processed_data_path)
+    train_qas = IO.load_from_pickle(path=args.train_processed_data_path, return_type=DrQARawDatasetItem)
+    valid_qas = IO.load_from_pickle(path=args.valid_processed_data_path, return_type=DrQARawDatasetItem)
     print("Loading processed data... ok")
     print(f"Length of train qa pairs: {len(train_qas):,}")
     print(f"Length of valid qa pairs: {len(valid_qas):,}")

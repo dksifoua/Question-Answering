@@ -2,7 +2,7 @@ import json
 import tqdm
 import pickle
 import numpy as np
-from typing import Any, Dict
+from typing import Any, Dict, List, Type
 
 
 class IO:
@@ -36,9 +36,10 @@ class IO:
             raise IOError
 
     @staticmethod
-    def load_from_pickle(path: str) -> Any:
+    def load_from_pickle(path: str, return_type: Type) -> Any:
+        print(f"Return Type: {return_type}")
         try:
             with open(path, mode="rb") as file:
-                return pickle.load(file)
+                return pickle.load(file)  # type: List[return_type]
         except IOError:
             raise IOError

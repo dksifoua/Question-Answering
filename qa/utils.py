@@ -7,7 +7,7 @@ import collections
 import numpy as np
 from typing import Dict, List, Tuple
 
-from question_answering.domain import RawDatasetItem
+from qa.domain import RawDatasetItem
 
 
 def ignore_warnings() -> None:
@@ -23,7 +23,7 @@ def seed_everything(seed: int) -> None:
     torch.cuda.manual_seed(seed)
 
     # https://pytorch.org/docs/stable/notes/randomness.html
-    torch.use_deterministic_algorithms(True)
+    # torch.use_deterministic_algorithms(True)
     # torch.backends.cudnn.benchmark = False
 
 

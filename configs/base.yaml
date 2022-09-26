@@ -25,3 +25,4 @@ training:
     n_epochs: 5
     batch_size: 128
     gradient_clipping: 1.0
+    learning_rate: 0.01

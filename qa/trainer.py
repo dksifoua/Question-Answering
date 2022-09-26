@@ -75,11 +75,3 @@ class Trainer:
                 best_loss = valid_loss
                 torch.save(self.model.state_dict(), self.model_path)
         return history
-
-    @staticmethod
-    def build_datasets():
-        raise NotImplementedError
-
-    @staticmethod
-    def build_dataloaders():
-        raise NotImplementedError

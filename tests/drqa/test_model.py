@@ -2,7 +2,7 @@ import unittest
 
 import torch
 
-from question_answering.drqa.model import DrQA
+from qa.drqa.model import DrQA
 
 
 class TestModel(unittest.TestCase):

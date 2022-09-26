@@ -2,9 +2,9 @@ import spacy
 import random
 import argparse
 
-from question_answering.io import IO
-from question_answering.configuration import Configuration
-from question_answering.preprocessing import add_extra_features_squad_v1, add_targets_to_squad_v1_data, is_bad_item, \
+from qa.io import IO
+from qa.configuration import Configuration
+from qa.preprocessing import add_extra_features_squad_v1, add_targets_to_squad_v1_data, is_bad_item, \
     parse_squad_v1_data, test_answer_start_indexes, test_targets
 
 

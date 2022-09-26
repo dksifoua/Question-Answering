@@ -3,7 +3,7 @@ import numpy as np
 
 import torch
 
-from question_answering.drqa.layers import BiLinearAttentionLayer
+from qa.drqa.layers import BiLinearAttentionLayer
 
 
 class TestBiLinearAttentionLayer(unittest.TestCase):

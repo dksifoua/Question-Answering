@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import Tuple
 
 import torch
 import torch.nn as nn
@@ -6,6 +6,7 @@ from torch import Tensor
 
 from ..base_model import BaseModel
 from .layers import AlignedQuestionEmbeddingLayer, BiLinearAttentionLayer, StackedBiLSTMsLayer, QuestionEncodingLayer
+from ..domain import DrQATensorDatasetBatch
 
 
 class DrQA(BaseModel):
@@ -65,20 +66,20 @@ class DrQA(BaseModel):
             question_hidden_size=hidden_size * n_layers * 2
         )
 
-    def forward(self, context_sequence: Tensor, context_lengths: Tensor, question_sequence: Tensor,
-                question_lengths: Tensor, exact_matches: Tensor, part_of_speeches: Tensor, named_entity_types: Tensor,
-                normalized_term_frequencies: Tensor) -> Tuple[Tensor, Tensor]:
+    def forward(self, batch: DrQATensorDatasetBatch) -> Tuple[Tensor, Tensor]:
         """
-        :param context_sequence: FloatTensor[batch_size, ctx_seq_len]
-        :param context_lengths: LongTensor[batch_size,]
-        :param question_sequence: FloatTensor[batch_size, qst_seq_len]
-        :param question_lengths: FloatTensor[batch_size,]
-        :param exact_matches: LongTensor[batch_size, ctx_seq_len]
-        :param part_of_speeches: LongTensor[batch_size, ctx_seq_len]
-        :param named_entity_types: LongTensor[batch_size, ctx_seq_len]
-        :param normalized_term_frequencies: FloatTensor[batch_size, ctx_seq_len]
+        :param batch: DrQATensorDatasetBatch
         :return: Tuple[FloatTensor[batch_size, ctx_seq_len], FloatTensor[batch_size, ctx_seq_len]]
         """
+        context_sequence = batch.context[0]  # [batch_size, ctx_seq_len]
+        context_lengths = batch.context[1]  # [batch_size,]
+        question_sequence = batch.question[0]  # [batch_size, qst_seq_len]
+        question_lengths = batch.question[1]  # [batch_size,]
+        exact_matches = batch.exact_match  # [batch_size, ctx_seq_len]
+        part_of_speeches = batch.part_of_speech  # [batch_size, ctx_seq_len]
+        named_entity_types = batch.named_entity_type  # [batch_size, ctx_seq_len]
+        normalized_term_frequencies = batch.normalized_term_frequency  # [batch_size, ctx_seq_len]
+
         context_mask = self.make_sequence_mask(input_sequence=context_sequence)  # [batch_size, ctx_seq_len]
         question_mask = self.make_sequence_mask(input_sequence=question_sequence)  # [batch_size, qst_seq_len]
 
