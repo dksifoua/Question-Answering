@@ -4,7 +4,7 @@ import collections
 from spacy.tokens import Token
 from typing import Dict, List
 
-from question_answering.domain import DrQARawDatasetItem, RawDatasetItem, Target, TokenFeature
+from qa.domain import DrQARawDatasetItem, RawDatasetItem, Target, TokenFeature
 
 
 def parse_squad_v1_data(data: Dict, spacy_nlp: spacy.language.Language) -> List[RawDatasetItem]:
@@ -70,8 +70,15 @@ def add_extra_features_squad_v1(qas: List[RawDatasetItem]) -> List[DrQARawDatase
         )
 
         qa_token_features.append(
-            DrQARawDatasetItem(id_=qa.id_, context=qa.context, question=qa.question, answer=qa.answer,
-                               answer_start_index=qa.answer_start_index, token_feature=token_feature)
+            DrQARawDatasetItem(
+                id_=qa.id_,
+                context=qa.context,
+                question=qa.question,
+                answer=qa.answer,
+                answer_start_index=qa.answer_start_index,
+                target=qa.target,
+                token_feature=token_feature
+            )
         )
 
     return qa_token_features

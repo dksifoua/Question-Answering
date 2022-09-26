@@ -53,3 +53,12 @@ class DrQATensorDatasetItem(_UnpackingDataClassMixin):
 
 
 DrQATensorDatasetBatch = DrQATensorDatasetItem
+
+__all__ = [
+    "Target",
+    "RawDatasetItem",
+    "TokenFeature",
+    "DrQARawDatasetItem",
+    "DrQATensorDatasetItem",
+    "DrQATensorDatasetBatch"
+]

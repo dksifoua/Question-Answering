@@ -1,13 +1,15 @@
-from typing import List, Tuple
+from typing import Tuple
 
 import torch
 import torch.nn as nn
 from torch import Tensor
 
+from ..base_model import BaseModel
 from .layers import AlignedQuestionEmbeddingLayer, BiLinearAttentionLayer, StackedBiLSTMsLayer, QuestionEncodingLayer
+from ..domain import DrQATensorDatasetBatch
 
 
-class DrQA(nn.Module):
+class DrQA(BaseModel):
     
     def __init__(self, vocabulary_size: int, embedding_size, n_extra_features: int, hidden_size: int, n_layers: int,
                  dropout: float, padding_index: int):
@@ -64,42 +66,20 @@ class DrQA(nn.Module):
             question_hidden_size=hidden_size * n_layers * 2
         )
 
-    def make_sequence_mask(self, input_sequence: Tensor) -> Tensor:
-        return input_sequence != self.padding_index
-
-    @staticmethod
-    def decode(starts: Tensor, ends: Tensor) -> Tuple[List[int], List[int], List[float]]:
+    def forward(self, batch: DrQATensorDatasetBatch) -> Tuple[Tensor, Tensor]:
         """
-        :param starts: FloatTensor[batch_size, ctx_seq_len]
-        :param ends: FloatTensor[batch_size, ctx_seq_len]
-        :return: Tuple[List[int], List[int], List[float]]
-        """
-        start_indexes, end_indexes, predicted_probabilities = [], [], []
-        for i in range(starts.size(0)):
-            probabilities = torch.ger(starts[i], ends[i])  # [ctx_seq_len, ctx_seq_len]
-            probability, index = torch.topk(probabilities.view(-1), k=1)
-
-            start_indexes.append(index.tolist()[0] // probabilities.size(0))
-            end_indexes.append(index.tolist()[0] % probabilities.size(1))
-
-            predicted_probabilities.append(probability.tolist()[0])
-
-        return start_indexes, end_indexes, predicted_probabilities
-
-    def forward(self, context_sequence: Tensor, context_lengths: Tensor, question_sequence: Tensor,
-                question_lengths: Tensor, exact_matches: Tensor, part_of_speeches: Tensor, named_entity_types: Tensor,
-                normalized_term_frequencies: Tensor) -> Tuple[Tensor, Tensor]:
-        """
-        :param context_sequence: FloatTensor[batch_size, ctx_seq_len]
-        :param context_lengths: LongTensor[batch_size,]
-        :param question_sequence: FloatTensor[batch_size, qst_seq_len]
-        :param question_lengths: FloatTensor[batch_size,]
-        :param exact_matches: LongTensor[batch_size, ctx_seq_len]
-        :param part_of_speeches: LongTensor[batch_size, ctx_seq_len]
-        :param named_entity_types: LongTensor[batch_size, ctx_seq_len]
-        :param normalized_term_frequencies: FloatTensor[batch_size, ctx_seq_len]
+        :param batch: DrQATensorDatasetBatch
         :return: Tuple[FloatTensor[batch_size, ctx_seq_len], FloatTensor[batch_size, ctx_seq_len]]
         """
+        context_sequence = batch.context[0]  # [batch_size, ctx_seq_len]
+        context_lengths = batch.context[1]  # [batch_size,]
+        question_sequence = batch.question[0]  # [batch_size, qst_seq_len]
+        question_lengths = batch.question[1]  # [batch_size,]
+        exact_matches = batch.exact_match  # [batch_size, ctx_seq_len]
+        part_of_speeches = batch.part_of_speech  # [batch_size, ctx_seq_len]
+        named_entity_types = batch.named_entity_type  # [batch_size, ctx_seq_len]
+        normalized_term_frequencies = batch.normalized_term_frequency  # [batch_size, ctx_seq_len]
+
         context_mask = self.make_sequence_mask(input_sequence=context_sequence)  # [batch_size, ctx_seq_len]
         question_mask = self.make_sequence_mask(input_sequence=question_sequence)  # [batch_size, qst_seq_len]
 

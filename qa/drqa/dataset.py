@@ -4,8 +4,8 @@ import torch
 from torch.nn.utils.rnn import pad_sequence
 from torch.utils.data import Dataset
 
-from question_answering.domain import DrQARawDatasetItem, DrQATensorDatasetItem, DrQATensorDatasetBatch
-from question_answering.vocabulary import Vocabulary
+from qa.domain import DrQARawDatasetItem, DrQATensorDatasetItem, DrQATensorDatasetBatch
+from qa.vocabulary import Vocabulary
 
 
 class SquadV1Dataset(Dataset):
@@ -22,6 +22,7 @@ class SquadV1Dataset(Dataset):
 
     def __getitem__(self, idx) -> DrQATensorDatasetItem:
         item: DrQARawDatasetItem = self.data[idx]
+        print(item)
         context = torch.LongTensor([*map(lambda token: self.text_vocab.stoi(token.text.lower()), item.context)])
         question = torch.LongTensor([*map(lambda token: self.text_vocab.stoi(token.text.lower()), item.question)])
         target = torch.LongTensor([item.target.start_index, item.target.end_index])
@@ -42,9 +43,11 @@ class SquadV1Dataset(Dataset):
         )
 
 
-def add_padding_and_batch_data(batch: List[DrQATensorDatasetItem], pad_token: str, text_vocab: Vocabulary,
+def add_padding_and_batch_data(batch: List[DrQATensorDatasetItem], text_vocab: Vocabulary,
                                pos_vocab: Vocabulary, ner_vocab: Vocabulary, include_lengths: bool,
                                device: torch.device) -> DrQATensorDatasetBatch:
+    pad_token = text_vocab.padding_token
+
     batch_context = [item.context for item in batch]
     batch_question = [item.question for item in batch]
     batch_target = [item.target for item in batch]
@@ -55,8 +58,8 @@ def add_padding_and_batch_data(batch: List[DrQATensorDatasetItem], pad_token: st
 
     length_context, length_question = None, None
     if include_lengths:
-        length_context = torch.LongTensor([context.size(0) for context in batch_context]).to(device)
-        length_question = torch.LongTensor([question.size(0) for question in batch_question]).to(device)
+        length_context = torch.LongTensor([context.size(0) for context in batch_context])  # .to(device)
+        length_question = torch.LongTensor([question.size(0) for question in batch_question])  # .to(device)
 
     batch_padded_context = pad_sequence(batch_context,
                                         batch_first=True,

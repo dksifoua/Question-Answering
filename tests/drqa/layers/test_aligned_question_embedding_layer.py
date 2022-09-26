@@ -1,7 +1,7 @@
 import torch
 import unittest
 import numpy as np
-from question_answering.drqa.layers import AlignedQuestionEmbeddingLayer
+from qa.drqa.layers import AlignedQuestionEmbeddingLayer
 
 
 class TestAlignedQuestionEmbeddingLayer(unittest.TestCase):

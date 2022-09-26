@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from torch import Tensor
 import torch.nn.functional as F
-from question_answering.drqa.layers import StackedBiLSTMsLayer
+from qa.drqa.layers import StackedBiLSTMsLayer
 
 
 class QuestionEncodingLayer(nn.Module):

@@ -12,5 +12,14 @@ download_data:
 download_spacy_model:
 	$(PYTHON) -m spacy download en_core_web_lg
 
+drqa_process_data:
+	$(PYTHON) -m py_scripts.drqa.process_data
+
+drqa_build_vocabulary:
+	$(PYTHON) -m py_scripts.drqa.build_vocabulary
+
+drqa_train_model:
+	$(PYTHON) -m py_scripts.drqa.train_model
+
 tests:
 	$(PYTHON) -m unittest
