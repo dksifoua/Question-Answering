@@ -112,10 +112,12 @@ if __name__ == "__main__":
     print(f"Length of valid qa pairs: {len(valid_qas):,}")
 
     print("Loading vocabularies...")
+    id_vocabulary = Vocabulary.load(path=args.vocabulary_uncompleted_path.format("id"))
     text_vocabulary = Vocabulary.load(path=args.vocabulary_uncompleted_path.format("text"))
     part_of_speech_vocabulary = Vocabulary.load(path=args.vocabulary_uncompleted_path.format("part_of_speech"))
     named_entity_types_vocabulary = Vocabulary.load(path=args.vocabulary_uncompleted_path.format("named_entity_types"))
     print("Loading vocabularies... done.")
+    print(f"Length of id vocabulary: {len(id_vocabulary):,}")
     print(f"Length of text vocabulary: {len(text_vocabulary):,}")
     print(f"Length of part of speech vocabulary: {len(part_of_speech_vocabulary):,}")
     print(f"Length of named entity type vocabulary: {len(named_entity_types_vocabulary):,}")
@@ -123,12 +125,14 @@ if __name__ == "__main__":
     print(f"Building datasets...")
     train_dataset = SquadV1Dataset(
         data=train_qas,
+        id_vocab=id_vocabulary,
         text_vocab=text_vocabulary,
         pos_vocab=part_of_speech_vocabulary,
         ner_vocab=named_entity_types_vocabulary
     )
     valid_dataset = SquadV1Dataset(
         data=valid_qas,
+        id_vocab=id_vocabulary,
         text_vocab=text_vocabulary,
         pos_vocab=part_of_speech_vocabulary,
         ner_vocab=named_entity_types_vocabulary
@@ -145,6 +149,7 @@ if __name__ == "__main__":
 
     print("Building dataloaders...")
     collate_function = functools.partial(add_padding_and_batch_data,
+                                         id_vocab=id_vocabulary,
                                          text_vocab=text_vocabulary,
                                          pos_vocab=part_of_speech_vocabulary,
                                          ner_vocab=named_entity_types_vocabulary,
@@ -182,7 +187,7 @@ if __name__ == "__main__":
         model=model,
         optimizer=optimizer,
         criterion=criterion,
-        id_vocab=Vocabulary(padding_token="", unknown_token=""),
+        id_vocab=id_vocabulary,
         text_vocab=text_vocabulary,
         model_path=args.model_path
     )
@@ -192,7 +197,7 @@ if __name__ == "__main__":
     history = trainer.train(
         train_loader=train_dataloader,
         valid_loader=valid_dataloader,
-        n_epochs=1,  # args.n_epochs,
+        n_epochs=args.n_epochs,
         gradient_clipping=args.gradient_clipping
     )
     print(history)

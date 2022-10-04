@@ -57,23 +57,28 @@ if __name__ == "__main__":
     print(f"Length of valid qa pairs: {len(valid_qas):,}")
 
     print("Building vocabularies...")
+    ids = [*map(lambda qa: qa.id_, train_qas)] + [*map(lambda qa: qa.id_, valid_qas)]
     contexts, questions = zip(*map(lambda qa: (qa.context, qa.question), train_qas))
     part_of_speeches = [*itertools.chain.from_iterable(map(lambda qa: qa.token_feature.part_of_speech, train_qas))]
     named_entity_types = [*itertools.chain.from_iterable(map(lambda qa: qa.token_feature.named_entity_type, train_qas))]
 
+    id_vocabulary = Vocabulary(padding_token=args.padding_token, unknown_token=args.unknown_token)
     text_vocabulary = Vocabulary(padding_token=args.padding_token, unknown_token=args.unknown_token)
     part_of_speech_vocabulary = Vocabulary(padding_token=args.padding_token, unknown_token=args.unknown_token)
     named_entity_types_vocabulary = Vocabulary(padding_token=args.padding_token, unknown_token=args.unknown_token)
 
-    text_vocabulary.build(data=contexts + questions, min_word_frequency=args.min_frequency)
-    part_of_speech_vocabulary.build(data=part_of_speeches, min_word_frequency=0)
-    named_entity_types_vocabulary.build(data=named_entity_types, min_word_frequency=0)
+    id_vocabulary.build(data=[*set(ids)], min_word_frequency=0)
+    text_vocabulary.build(data=[*set(contexts + questions)], min_word_frequency=args.min_frequency)
+    part_of_speech_vocabulary.build(data=[*set(part_of_speeches)], min_word_frequency=0)
+    named_entity_types_vocabulary.build(data=[*set(named_entity_types)], min_word_frequency=0)
     print("Building vocabularies... ok")
+    print(f"Length of id vocabulary: {len(id_vocabulary):,}")
     print(f"Length of text vocabulary: {len(text_vocabulary):,}")
     print(f"Length of part of speech vocabulary: {len(part_of_speech_vocabulary):,}")
     print(f"Length of named entity type vocabulary: {len(named_entity_types_vocabulary):,}")
 
     print("Saving vocabularies...")
+    id_vocabulary.save(path=args.uncompleted_path.format("id"))
     text_vocabulary.save(path=args.uncompleted_path.format("text"))
     part_of_speech_vocabulary.save(path=args.uncompleted_path.format("part_of_speech"))
     named_entity_types_vocabulary.save(path=args.uncompleted_path.format("named_entity_types"))

@@ -5,14 +5,14 @@ data:
     valid_path: ./data/dev-v1.1.json
   processed:
     drqa:
-      train_path: ./data/drqa_processed_train_data.dat
-      valid_path: ./data/drqa_processed_valid_data.dat
+      train_path: ./data/drqa_processed_train.data
+      valid_path: ./data/drqa_processed_valid.data
 vocabulary:
   padding_token: <pad>
   unknown_token: <unk>
   min_frequency: 5
   drqa:
-    path: ./data/drqa_{}_vocabulary.dat
+    path: ./data/drqa_{}.vocabulary
 model:
   drqa:
     n_layers: 3

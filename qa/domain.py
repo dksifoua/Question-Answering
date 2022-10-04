@@ -43,6 +43,7 @@ class DrQARawDatasetItem(RawDatasetItem):
 
 @dataclasses.dataclass
 class DrQATensorDatasetItem(_UnpackingDataClassMixin):
+    id_: torch.LongTensor
     context: Union[torch.LongTensor, Tuple[torch.LongTensor, torch.LongTensor]]
     question: Union[torch.LongTensor, Tuple[torch.LongTensor, torch.LongTensor]]
     target: torch.LongTensor
