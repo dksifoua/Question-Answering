@@ -29,8 +29,6 @@ class Trainer:
         pbar = tqdm.tqdm(enumerate(loader), total=len(loader))
         for index, batch in pbar:  # type: int, DrQATensorDatasetBatch
             self.optimizer.zero_grad()
-            # TODO
-            #  Unpack the batch inside the model
             starts, ends = self.model(batch)  # [batch_size, ctx_len]
             loss = self.criterion(starts, batch.target[:, 0]) + self.criterion(ends, batch.target[:, 1])
             loss.backward()
@@ -48,11 +46,11 @@ class Trainer:
             for _, batch in pbar:  # type: int, DrQATensorDatasetBatch
                 starts, ends = self.model(batch)  # [batch_size, ctx_len]
                 loss = self.criterion(starts, batch.target[:, 0]) + self.criterion(ends, batch.target[:, 1])
-                start_indexes, end_indexes, _ = self.model.decode(starts=F.softmax(starts, dim=-1),
-                                                                  ends=F.softmax(ends, dim=-1))
+                start_indexes, end_indexes, _ = self.model.decode(
+                    starts=F.softmax(starts, dim=-1),
+                    ends=F.softmax(ends, dim=-1)
+                )
                 for index in range(starts.size(0)):
-                    # TODO
-                    #  Add id_ to data
                     id_ = self.id_vocab.itos(batch.id_[index].item())
                     prediction = batch.context[0][index][start_indexes[index]:end_indexes[index] + 1]
                     predictions[id_] = ' '.join([self.text_vocab.itos(ind.item()) for ind in prediction])
