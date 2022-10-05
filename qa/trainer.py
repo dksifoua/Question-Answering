@@ -69,7 +69,4 @@ class Trainer:
             history["loss"].append(loss)
             history["valid_loss"].append(valid_loss)
 
-            if best_loss > valid_loss:
-                best_loss = valid_loss
-                torch.save(self.model.state_dict(), self.model_path)
         return history

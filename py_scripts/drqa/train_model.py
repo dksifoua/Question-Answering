@@ -139,6 +139,7 @@ if __name__ == "__main__":
     )
     print(f"Building datasets... done.")
     train_dataset_item = train_dataset[0]
+    print(f"id_ shape: {train_dataset_item.id_.shape}")
     print(f"context shape: {train_dataset_item.context.shape}")
     print(f"question shape: {train_dataset_item.question.shape}")
     print(f"target shape: {train_dataset_item.target.shape}")
@@ -159,6 +160,7 @@ if __name__ == "__main__":
     valid_dataloader = DataLoader(valid_dataset, batch_size=args.batch_size, collate_fn=collate_function)
     print("Building dataloaders... done.")
     for batch in train_dataloader:  # type: DrQATensorDatasetBatch
+        print("IDs:", batch.id_.shape)
         print("Context:", batch.context[0].shape, batch.context[1].shape)
         print("Question:", batch.question[0].shape, batch.question[1].shape)
         print("Target:", batch.target.shape)
