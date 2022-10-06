@@ -1,0 +1,28 @@
+seed: 542
+data:
+  raw:
+    train_path: ./data/train-v1.1.json
+    valid_path: ./data/dev-v1.1.json
+  processed:
+    drqa:
+      train_path: ./data/drqa_processed_train.data
+      valid_path: ./data/drqa_processed_valid.data
+vocabulary:
+  padding_token: <pad>
+  unknown_token: <unk>
+  min_frequency: 5
+  drqa:
+    path: ./data/drqa_{}.vocabulary
+model:
+  drqa:
+    n_layers: 3
+    embedding_size: 300
+    hidden_size: 128
+    dropout: 0.3
+    path: ./checkpoints/drqa.pth
+training:
+  drqa:
+    n_epochs: 5
+    batch_size: 128
+    gradient_clipping: 1.0
+    learning_rate: 0.01
