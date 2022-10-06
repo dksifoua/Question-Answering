@@ -89,20 +89,21 @@ class AverageMeter:
     # TODO
     #  Add typing
 
-    def __init__(self):
-        self.value = 0.
-        self.sum = 0.
-        self.count = 0
-        self.average = 0.
+    def __init__(self, keys: List[str]):
+        self.keys = keys
+        self.value = {key: 0. for key in keys}
+        self.sum = {key: 0. for key in keys}
+        self.count = {key: 0. for key in keys}
+        self.average = {key: 0. for key in keys}
 
     def reset(self):
-        self.value = 0.
-        self.sum = 0.
-        self.count = 0
-        self.average = 0.
+        self.value = {key: 0. for key in self.keys}
+        self.sum = {key: 0. for key in self.keys}
+        self.count = {key: 0. for key in self.keys}
+        self.average = {key: 0. for key in self.keys}
 
-    def update(self, value, n=1):
-        self.value = value
-        self.sum += value * n
-        self.count += n
-        self.average = self.sum / self.count
+    def update(self, key: str, value: float, n: int = 1):
+        self.value[key] = value
+        self.sum[key] += value * n
+        self.count[key] += n
+        self.average[key] = self.sum[key] / self.count[key]

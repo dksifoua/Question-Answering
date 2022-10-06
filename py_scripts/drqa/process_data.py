@@ -63,8 +63,6 @@ if __name__ == "__main__":
     add_targets_to_squad_v1_data(qas=train_qas)
     add_targets_to_squad_v1_data(qas=valid_qas)
     print("Adding targets... ok")
-    print(f"Length of train qa pairs: {len(train_qas):,}")
-    print(f"Length of valid qa pairs: {len(valid_qas):,}")
 
     print("Filtering out bad targets...")
     train_qas = [*filter(is_bad_item, train_qas)]

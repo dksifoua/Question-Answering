@@ -18,7 +18,7 @@ class Vocabulary:
         self.index2word: Dict[int, str] = {}
 
     def build(self, data: List[Union[Doc, str]], min_word_frequency: int) -> None:
-        words = [self.padding_token, self.unknown_token]
+        words = []
 
         type_ = type(data[0])
         if type_ == Doc:
@@ -30,12 +30,10 @@ class Vocabulary:
             raise TypeError(f"The type {type_} is not supported!")
 
         self.word2count = collections.Counter(words)
-        self.vocabulary = sorted(filter(
-                lambda word:
-                self.word2count[word] >= min_word_frequency
-                or word == self.padding_token
-                or word == self.unknown_token, self.word2count
-        ))
+        self.vocabulary = [self.padding_token] + sorted(filter(
+            lambda word: self.word2count[word] >= min_word_frequency,
+            self.word2count
+        )) + [self.unknown_token]  # Ensure that pad token gets index 0 and unknown token gets the las index
         self.word2index = {word: index for index, word in enumerate(self.vocabulary)}
         self.index2word = {index: word for index, word in enumerate(self.vocabulary)}
 
