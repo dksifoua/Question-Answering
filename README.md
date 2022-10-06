@@ -4,6 +4,10 @@ Question-Answering is a classical problem in natural language processing, which 
 
 In this repo, I implemented end-to-end neural networks model which aims to answer questions from a given passage.
 
+HUMAN PERFORMANCE
+- EM: 86.831
+- F1: 89.452
+
 ## TODO
 
 - [x] DrQA

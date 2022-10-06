@@ -33,7 +33,7 @@ class Vocabulary:
         self.vocabulary = [self.padding_token] + sorted(filter(
             lambda word: self.word2count[word] >= min_word_frequency,
             self.word2count
-        )) + [self.unknown_token]
+        )) + [self.unknown_token]  # Ensure that pad token gets index 0 and unknown token gets the las index
         self.word2index = {word: index for index, word in enumerate(self.vocabulary)}
         self.index2word = {index: word for index, word in enumerate(self.vocabulary)}
 

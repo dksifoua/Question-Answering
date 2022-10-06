@@ -11,8 +11,12 @@ class TestStackedBiLSTMsLayer(unittest.TestCase):
         self.n_layers = 8
         self.dropout = 0.5
 
-        self.stack_bilstms_layer = StackedBiLSTMsLayer(embedding_size=self.embedding_size, hidden_size=self.hidden_size,
-                                                       n_layers=self.n_layers, dropout=self.dropout)
+        self.stack_bilstms_layer = StackedBiLSTMsLayer(
+            embedding_size=self.embedding_size,
+            hidden_size=self.hidden_size,
+            n_layers=self.n_layers,
+            dropout=self.dropout
+        )
 
     def test_forward(self):
         sequence_length, batch_size = 50, 32
