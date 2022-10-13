@@ -14,6 +14,9 @@ vocabulary:
   drqa:
     path: ./data/drqa_{}.vocabulary
 model:
+  embeddings:
+    path: ./data/glove.840B.300d.txt
+    tune: True
   drqa:
     n_layers: 3
     embedding_size: 300

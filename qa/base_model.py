@@ -1,3 +1,6 @@
+import functools
+
+import numpy as np
 from typing import Tuple, List
 
 import torch
@@ -12,6 +15,17 @@ class BaseModel(nn.Module):
 
     def make_sequence_mask(self, input_sequence: Tensor) -> Tensor:
         return input_sequence != self.padding_index
+
+    def load_word_embeddings(self, embedding_matrix: np.ndarray, tune: bool, found_indexes: List[int]):
+        def tune_embeddings(grad, word_indexes: List[int]):
+            grad[word_indexes] = 0
+            return grad
+
+        self.embedding_layer.weight = nn.Parameter(torch.FloatTensor(embedding_matrix))
+        if tune:
+            self.embedding_layer.weight.register_hook(
+                functools.partial(tune_embeddings, word_indexes=found_indexes)
+            )  # Only fine-tune the words that aren't present in embeddings matrix
 
     @staticmethod
     def decode(starts: Tensor, ends: Tensor) -> Tuple[List[int], List[int], List[float]]:
