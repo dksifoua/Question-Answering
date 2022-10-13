@@ -1,4 +1,5 @@
 import re
+import tqdm
 import torch
 import random
 import string
@@ -8,6 +9,7 @@ import numpy as np
 from typing import Dict, List, Tuple
 
 from qa.domain import RawDatasetItem
+from qa.vocabulary import Vocabulary
 
 
 def ignore_warnings() -> None:
@@ -25,6 +27,37 @@ def seed_everything(seed: int) -> None:
     # https://pytorch.org/docs/stable/notes/randomness.html
     # torch.use_deterministic_algorithms(True)
     # torch.backends.cudnn.benchmark = False
+
+
+def load_glove_embeddings(path: str) -> Dict[str, np.ndarray]:
+    glove_embeddings = {}
+    try:
+        file = open(path, mode='r', encoding="utf-8")
+        for line in tqdm.tqdm(file):
+            values = line.split(' ')
+            glove_embeddings[values[0]] = np.asarray(values[1:], dtype="float32")
+        return glove_embeddings
+    except IOError:
+        raise IOError
+
+
+def extract_embeddings(embeddings: Dict[str, np.ndarray], text_vocab: Vocabulary, embedding_size: int) \
+        -> Tuple[np.ndarray, List[int], List[int]]:
+    found_indexes, not_found_indexes = [], []
+    embedding_matrix = np.zeros((len(text_vocab), embedding_size))
+    most_common_indexes = []
+    for index, word in enumerate(text_vocab.vocabulary):
+        try:
+            if word in embeddings:
+                found_indexes.append(index)
+                embedding_matrix[index] = embeddings[word]
+            else:
+                not_found_indexes.append(index)
+        except KeyError:
+            raise KeyError
+        except ValueError:
+            raise ValueError
+    return embedding_matrix, found_indexes, not_found_indexes
 
 
 def normalize(answer: str) -> str:
@@ -86,23 +119,21 @@ def metrics(predictions: Dict[str, str], qas: List[RawDatasetItem]) -> Tuple[flo
 
 
 class AverageMeter:
-    # TODO
-    #  Add typing
 
     def __init__(self, keys: List[str]):
         self.keys = keys
         self.value = {key: 0. for key in keys}
         self.sum = {key: 0. for key in keys}
-        self.count = {key: 0. for key in keys}
+        self.count = {key: 0 for key in keys}
         self.average = {key: 0. for key in keys}
 
     def reset(self):
         self.value = {key: 0. for key in self.keys}
         self.sum = {key: 0. for key in self.keys}
-        self.count = {key: 0. for key in self.keys}
+        self.count = {key: 0 for key in self.keys}
         self.average = {key: 0. for key in self.keys}
 
-    def update(self, key: str, value: float, n: int = 1):
+    def update(self, key: str, value: float, n: int = 1) -> None:
         self.value[key] = value
         self.sum[key] += value * n
         self.count[key] += n

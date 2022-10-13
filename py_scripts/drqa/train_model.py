@@ -11,7 +11,7 @@ from qa.io import IO
 from qa.domain import *
 from qa.drqa.model import DrQA
 from qa.trainer import Trainer
-from qa.utils import seed_everything, ignore_warnings
+from qa.utils import seed_everything, ignore_warnings, load_glove_embeddings, extract_embeddings
 from qa.vocabulary import Vocabulary
 from qa.configuration import Configuration
 
@@ -37,6 +37,12 @@ if __name__ == "__main__":
                         required=False,
                         default=configuration.base.data.processed.drqa.valid_path,
                         help="Validation processed data path")
+    parser.add_argument("--embedding_path",
+                        action="store",
+                        type=str,
+                        required=False,
+                        default=configuration.base.model.embeddings.path,
+                        help="Embedding path")
     parser.add_argument("--n_layers",
                         action="store",
                         type=int,
@@ -49,6 +55,12 @@ if __name__ == "__main__":
                         required=False,
                         default=configuration.base.model.drqa.embedding_size,
                         help="Embedding size")
+    parser.add_argument("--tune_embeddings",
+                        action="store",
+                        type=bool,
+                        required=False,
+                        default=configuration.base.model.embeddings.tune,
+                        help="Tune embeddings?")
     parser.add_argument("--hidden_size",
                         action="store",
                         type=int,
@@ -170,6 +182,19 @@ if __name__ == "__main__":
         print("Normalized term frequency:", batch.normalized_term_frequency.shape)
         break
 
+    print("Loading embeddings...")
+    glove_embeddings = load_glove_embeddings(path=args.embedding_path)
+    embedding_matrix, found_indexes, not_found_indexes = extract_embeddings(
+        embeddings=glove_embeddings,
+        text_vocab=text_vocabulary,
+        embedding_size=args.embedding_size
+    )
+    print("Loading embeddings... done.")
+    print(f"Number of words found in GLoVE embeddings: {len(found_indexes)}/{len(text_vocabulary)} = "
+          f"{100 * len(found_indexes) / len(text_vocabulary):.2f}%")
+    print(f"Number of words not found in GLoVE embeddings: {len(not_found_indexes)}/{len(text_vocabulary)} = "
+          f"{100 * len(not_found_indexes) / len(text_vocabulary):.2f}%")
+
     print("Building the model, optimizer, loss function and trainer...")
     padding_token_index = text_vocabulary.stoi(word=text_vocabulary.padding_token)
     model = DrQA(
@@ -180,7 +205,9 @@ if __name__ == "__main__":
         n_layers=args.n_layers,
         dropout=args.dropout,
         padding_index=padding_token_index
-    ).to(device=device)
+    )
+    model.load_word_embeddings(embedding_matrix=embedding_matrix, tune=True, found_indexes=found_indexes)
+    model.to(device=device)
     print(f"Number of parameters of the model: {model.count_parameters():,}")
     print(f"Model architecture: {model}")
     optimizer = optim.Adamax(params=model.parameters(), lr=args.learning_rate)
