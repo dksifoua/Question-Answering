@@ -72,6 +72,8 @@ class Trainer:
                 f"Epoch: {epoch + 1:03d} |       loss: {tracker.average['loss']:6.3f} |       "
                 f"em: {tracker.average['em']:6.3f} |       f1: {tracker.average['f1']:6.3f}"
             )
+            # TODO
+            #   Only break in for testing the training class (unit test or over fit a single batch)
             break
         return tracker
 
@@ -95,6 +97,8 @@ class Trainer:
                     f"           | valid_loss: {tracker.average['loss']:6.3f} | valid_em: {tracker.average['em']:6.3f} "
                     f"| valid_f1: {tracker.average['f1']:6.3f}"
                 )
+                # TODO
+                #   Only break in for testing the training class (unit test or over fit a single batch)
                 break
         return tracker
 
