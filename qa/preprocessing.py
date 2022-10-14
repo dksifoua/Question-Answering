@@ -17,9 +17,15 @@ def parse_squad_v1_data(data: Dict, spacy_nlp: spacy.language.Language) -> List[
                 id_ = qa["id"]
                 question = spacy_nlp(qa["question"], disable=disabled_components)
                 for answer in qa["answers"]:
-                    qas.append(RawDatasetItem(id_=id_, context=context, question=question,
-                                              answer=spacy_nlp(answer["text"], disable=disabled_components),
-                                              answer_start_index=answer["answer_start"]))
+                    qas.append(
+                        RawDatasetItem(
+                            id_=id_,
+                            context=context,
+                            question=question,
+                            answer=spacy_nlp(answer["text"], disable=disabled_components),
+                            answer_start_index=answer["answer_start"]
+                        )
+                    )
     return qas
 
 

@@ -10,6 +10,7 @@ from qa.drqa.dataset import SquadV1Dataset, add_padding_and_batch_data
 from qa.io import IO
 from qa.domain import *
 from qa.drqa.model import DrQA
+from qa.logger import QALogger
 from qa.trainer import Trainer
 from qa.utils import seed_everything, ignore_warnings, load_glove_embeddings, extract_embeddings
 from qa.vocabulary import Vocabulary
@@ -17,6 +18,7 @@ from qa.configuration import Configuration
 
 
 if __name__ == "__main__":
+    logger = QALogger.get_logger(name="BuildVocabulary")
     configuration = Configuration()
     parser = argparse.ArgumentParser(description="Train a DrQA model")
     parser.add_argument("--seed",
@@ -116,25 +118,25 @@ if __name__ == "__main__":
     seed_everything(seed=args.seed)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    print("Loading processed data...")
+    logger.info("Loading processed data...")
     train_qas = IO.load_from_pickle(path=args.train_processed_data_path, return_type=DrQARawDatasetItem)
     valid_qas = IO.load_from_pickle(path=args.valid_processed_data_path, return_type=DrQARawDatasetItem)
-    print("Loading processed data... done.")
-    print(f"Length of train qa pairs: {len(train_qas):,}")
-    print(f"Length of valid qa pairs: {len(valid_qas):,}")
+    logger.info("Loading processed data... done.")
+    logger.info(f"Length of train qa pairs: {len(train_qas):,}")
+    logger.info(f"Length of valid qa pairs: {len(valid_qas):,}")
 
-    print("Loading vocabularies...")
+    logger.info("Loading vocabularies...")
     id_vocabulary = Vocabulary.load(path=args.vocabulary_uncompleted_path.format("id"))
     text_vocabulary = Vocabulary.load(path=args.vocabulary_uncompleted_path.format("text"))
     part_of_speech_vocabulary = Vocabulary.load(path=args.vocabulary_uncompleted_path.format("part_of_speech"))
     named_entity_types_vocabulary = Vocabulary.load(path=args.vocabulary_uncompleted_path.format("named_entity_types"))
-    print("Loading vocabularies... done.")
-    print(f"Length of id vocabulary: {len(id_vocabulary):,}")
-    print(f"Length of text vocabulary: {len(text_vocabulary):,}")
-    print(f"Length of part of speech vocabulary: {len(part_of_speech_vocabulary):,}")
-    print(f"Length of named entity type vocabulary: {len(named_entity_types_vocabulary):,}")
+    logger.info("Loading vocabularies... done.")
+    logger.info(f"Length of id vocabulary: {len(id_vocabulary):,}")
+    logger.info(f"Length of text vocabulary: {len(text_vocabulary):,}")
+    logger.info(f"Length of part of speech vocabulary: {len(part_of_speech_vocabulary):,}")
+    logger.info(f"Length of named entity type vocabulary: {len(named_entity_types_vocabulary):,}")
 
-    print(f"Building datasets...")
+    logger.info(f"Building datasets...")
     train_dataset = SquadV1Dataset(
         data=train_qas,
         id_vocab=id_vocabulary,
@@ -149,18 +151,18 @@ if __name__ == "__main__":
         pos_vocab=part_of_speech_vocabulary,
         ner_vocab=named_entity_types_vocabulary
     )
-    print(f"Building datasets... done.")
+    logger.info(f"Building datasets... done.")
     train_dataset_item = train_dataset[0]
-    print(f"id_ shape: {train_dataset_item.id_.shape}")
-    print(f"context shape: {train_dataset_item.context.shape}")
-    print(f"question shape: {train_dataset_item.question.shape}")
-    print(f"target shape: {train_dataset_item.target.shape}")
-    print(f"exact_match shape: {train_dataset_item.exact_match.shape}")
-    print(f"part_of_speech shape: {train_dataset_item.part_of_speech.shape}")
-    print(f"named_entity_type shape: {train_dataset_item.named_entity_type.shape}")
-    print(f"normalized_term_frequency shape: {train_dataset_item.normalized_term_frequency.shape}")
+    logger.info(f"id_ shape: {train_dataset_item.id_.shape}")
+    logger.info(f"context shape: {train_dataset_item.context.shape}")
+    logger.info(f"question shape: {train_dataset_item.question.shape}")
+    logger.info(f"target shape: {train_dataset_item.target.shape}")
+    logger.info(f"exact_match shape: {train_dataset_item.exact_match.shape}")
+    logger.info(f"part_of_speech shape: {train_dataset_item.part_of_speech.shape}")
+    logger.info(f"named_entity_type shape: {train_dataset_item.named_entity_type.shape}")
+    logger.info(f"normalized_term_frequency shape: {train_dataset_item.normalized_term_frequency.shape}")
 
-    print("Building dataloaders...")
+    logger.info("Building dataloaders...")
     collate_function = functools.partial(add_padding_and_batch_data,
                                          id_vocab=id_vocabulary,
                                          text_vocab=text_vocabulary,
@@ -170,32 +172,32 @@ if __name__ == "__main__":
                                          device=device)
     train_dataloader = DataLoader(train_dataset, batch_size=args.batch_size, collate_fn=collate_function)
     valid_dataloader = DataLoader(valid_dataset, batch_size=args.batch_size, collate_fn=collate_function)
-    print("Building dataloaders... done.")
+    logger.info("Building dataloaders... done.")
     for batch in train_dataloader:  # type: DrQATensorDatasetBatch
-        print("IDs:", batch.id_.shape)
-        print("Context:", batch.context[0].shape, batch.context[1].shape)
-        print("Question:", batch.question[0].shape, batch.question[1].shape)
-        print("Target:", batch.target.shape)
-        print("Exact match:", batch.exact_match.shape)
-        print("Part of speech:", batch.part_of_speech.shape)
-        print("Named entity type:", batch.named_entity_type.shape)
-        print("Normalized term frequency:", batch.normalized_term_frequency.shape)
+        logger.info("IDs:", batch.id_.shape)
+        logger.info("Context:", batch.context[0].shape, batch.context[1].shape)
+        logger.info("Question:", batch.question[0].shape, batch.question[1].shape)
+        logger.info("Target:", batch.target.shape)
+        logger.info("Exact match:", batch.exact_match.shape)
+        logger.info("Part of speech:", batch.part_of_speech.shape)
+        logger.info("Named entity type:", batch.named_entity_type.shape)
+        logger.info("Normalized term frequency:", batch.normalized_term_frequency.shape)
         break
 
-    print("Loading embeddings...")
+    logger.info("Loading embeddings...")
     glove_embeddings = load_glove_embeddings(path=args.embedding_path)
     embedding_matrix, found_indexes, not_found_indexes = extract_embeddings(
         embeddings=glove_embeddings,
         text_vocab=text_vocabulary,
         embedding_size=args.embedding_size
     )
-    print("Loading embeddings... done.")
-    print(f"Number of words found in GLoVE embeddings: {len(found_indexes)}/{len(text_vocabulary)} = "
+    logger.info("Loading embeddings... done.")
+    logger.info(f"Number of words found in GLoVE embeddings: {len(found_indexes)}/{len(text_vocabulary)} = "
           f"{100 * len(found_indexes) / len(text_vocabulary):.2f}%")
-    print(f"Number of words not found in GLoVE embeddings: {len(not_found_indexes)}/{len(text_vocabulary)} = "
+    logger.info(f"Number of words not found in GLoVE embeddings: {len(not_found_indexes)}/{len(text_vocabulary)} = "
           f"{100 * len(not_found_indexes) / len(text_vocabulary):.2f}%")
 
-    print("Building the model, optimizer, loss function and trainer...")
+    logger.info("Building the model, optimizer, loss function and trainer...")
     padding_token_index = text_vocabulary.stoi(word=text_vocabulary.padding_token)
     model = DrQA(
         vocabulary_size=len(text_vocabulary),
@@ -208,8 +210,8 @@ if __name__ == "__main__":
     )
     model.load_word_embeddings(embedding_matrix=embedding_matrix, tune=True, found_indexes=found_indexes)
     model.to(device=device)
-    print(f"Number of parameters of the model: {model.count_parameters():,}")
-    print(f"Model architecture: {model}")
+    logger.info(f"Number of parameters of the model: {model.count_parameters():,}")
+    logger.info(f"Model architecture: {model}")
     optimizer = optim.Adamax(params=model.parameters(), lr=args.learning_rate)
     criterion = nn.CrossEntropyLoss(ignore_index=padding_token_index)
     trainer = Trainer(
@@ -220,14 +222,14 @@ if __name__ == "__main__":
         text_vocab=text_vocabulary,
         model_path=args.model_path
     )
-    print("Building the model, optimizer, loss function and trainer... done.")
+    logger.info("Building the model, optimizer, loss function and trainer... done.")
 
-    print("Model training...")
+    logger.info("Model training...")
     history = trainer.train(
         train_loader=train_dataloader,
         valid_loader=valid_dataloader,
         n_epochs=args.n_epochs,
         gradient_clipping=args.gradient_clipping
     )
-    print(history)
-    print("Model Training... done.")
+    logger.info(history)
+    logger.info("Model Training... done.")

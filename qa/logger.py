@@ -3,6 +3,9 @@ import logging
 
 
 class QALogger:
+    # TODO
+    #  Make this class as a singleton
+
     DEBUG_COLOR = "\x1b[30;20m"
     INFO_COLOR = "\x1b[34;20m"
     WARNING_COLOR = "\x1b[33;20m"
