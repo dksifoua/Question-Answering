@@ -3,11 +3,13 @@ import itertools
 
 from qa.io import IO
 from qa.domain import *
+from qa.logger import QALogger
 from qa.vocabulary import Vocabulary
 from qa.configuration import Configuration
 
 
 if __name__ == "__main__":
+    logger = QALogger.get_logger(name="BuildVocabulary")
     configuration = Configuration()
     parser = argparse.ArgumentParser(description="DrQA build vocabulary")
     parser.add_argument("--train_processed_data_path",
@@ -49,14 +51,14 @@ if __name__ == "__main__":
                              "subsequent vocabularies)")
     args = parser.parse_args()
 
-    print("Loading processed data...")
+    logger.info("Loading processed data...")
     train_qas = IO.load_from_pickle(path=args.train_processed_data_path, return_type=DrQARawDatasetItem)
     valid_qas = IO.load_from_pickle(path=args.valid_processed_data_path, return_type=DrQARawDatasetItem)
-    print("Loading processed data... ok")
-    print(f"Length of train qa pairs: {len(train_qas):,}")
-    print(f"Length of valid qa pairs: {len(valid_qas):,}")
+    logger.info("Loading processed data... ok")
+    logger.info(f"Length of train qa pairs: {len(train_qas):,}")
+    logger.info(f"Length of valid qa pairs: {len(valid_qas):,}")
 
-    print("Building vocabularies...")
+    logger.info("Building vocabularies...")
     ids = [*map(lambda qa: qa.id_, train_qas)] + [*map(lambda qa: qa.id_, valid_qas)]
     contexts, questions = zip(*map(lambda qa: (qa.context, qa.question), train_qas))
     part_of_speeches = [*itertools.chain.from_iterable(map(lambda qa: qa.token_feature.part_of_speech, train_qas))]
@@ -71,15 +73,15 @@ if __name__ == "__main__":
     text_vocabulary.build(data=[*set(contexts + questions)], min_word_frequency=args.min_frequency)
     part_of_speech_vocabulary.build(data=[*set(part_of_speeches)], min_word_frequency=0)
     named_entity_types_vocabulary.build(data=[*set(named_entity_types)], min_word_frequency=0)
-    print("Building vocabularies... ok")
-    print(f"Length of id vocabulary: {len(id_vocabulary):,}")
-    print(f"Length of text vocabulary: {len(text_vocabulary):,}")
-    print(f"Length of part of speech vocabulary: {len(part_of_speech_vocabulary):,}")
-    print(f"Length of named entity type vocabulary: {len(named_entity_types_vocabulary):,}")
+    logger.info("Building vocabularies... ok")
+    logger.info(f"Length of id vocabulary: {len(id_vocabulary):,}")
+    logger.info(f"Length of text vocabulary: {len(text_vocabulary):,}")
+    logger.info(f"Length of part of speech vocabulary: {len(part_of_speech_vocabulary):,}")
+    logger.info(f"Length of named entity type vocabulary: {len(named_entity_types_vocabulary):,}")
 
-    print("Saving vocabularies...")
+    logger.info("Saving vocabularies...")
     id_vocabulary.save(path=args.uncompleted_path.format("id"))
     text_vocabulary.save(path=args.uncompleted_path.format("text"))
     part_of_speech_vocabulary.save(path=args.uncompleted_path.format("part_of_speech"))
     named_entity_types_vocabulary.save(path=args.uncompleted_path.format("named_entity_types"))
-    print("Saving vocabularies... ok")
+    logger.info("Saving vocabularies... ok")

@@ -1,6 +1,8 @@
 import yaml
 import dotmap
 
+from qa.logger import QALogger
+
 
 class Configuration:
     _BASE_CONFIG_PATH = "./configs/base.yaml"
@@ -14,6 +16,6 @@ class Configuration:
             with open(Configuration._BASE_CONFIG_PATH, mode='r') as file:
                 content = yaml.load(stream=file, Loader=yaml.FullLoader)
                 return dotmap.DotMap(content)
-        except IOError:
-            raise IOError
+        except IOError as error:
+            QALogger.get_logger().error(error)
 
