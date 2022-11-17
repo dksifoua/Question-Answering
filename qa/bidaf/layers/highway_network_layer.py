@@ -20,6 +20,10 @@ class HighwayNetworkLayer(nn.Module):
         self.dense_gate = nn.ModuleList([nn.Linear(hidden_size, hidden_size) for _ in range(n_layers)])
 
     def forward(self, inputs: torch.Tensor) -> torch.Tensor:
+        """
+        @param inputs: FloatTensor[batch_size, seq_len, hidden_size]
+        @return: FloatTensor[batch_size, seq_len, hidden_size]
+        """
         for i in range(self.n_layers):
             flow = F.relu(self.dense_flow[i](inputs))
             gate = torch.sigmoid(self.dense_gate[i](inputs))
