@@ -12,7 +12,7 @@ class TestHighwayNetwork(unittest.TestCase):
         self.n_layers = 5
         self.highway_network_layer = HighwayNetworkLayer(hidden_size=self.hidden_size, n_layers=self.n_layers)
 
-    def test_forward(self):
+    def test_forward(self) -> None:
         batch_size, input_seq_len = 64, 50
         outputs = self.highway_network_layer(inputs=torch.randn(size=(batch_size, input_seq_len, self.hidden_size)))
         self.assertEqual(outputs.size(), torch.Size([batch_size, input_seq_len, self.hidden_size]))
