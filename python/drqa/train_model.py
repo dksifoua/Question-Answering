@@ -6,10 +6,10 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
 
-from qa.drqa.dataset import SquadV1Dataset, add_padding_and_batch_data
+from drqa import SquadV1Dataset, add_padding_and_batch_data
 from qa.io import IO
 from qa.domain import *
-from qa.drqa.model import DrQA
+from drqa.model import DrQA
 from qa.logger import QALogger
 from qa.trainer import Trainer
 from qa.utils import seed_everything, ignore_warnings, load_glove_embeddings, extract_embeddings

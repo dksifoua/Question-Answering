@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 
 import torch
-from qa.drqa.layers import QuestionEncodingLayer
+from drqa.layers import QuestionEncodingLayer
 
 
 class TestQuestionEncodingLayer(unittest.TestCase):

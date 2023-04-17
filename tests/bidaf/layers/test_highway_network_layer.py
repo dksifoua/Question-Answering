@@ -2,7 +2,7 @@ import unittest
 
 import torch
 
-from qa.bidaf.layers.highway_network_layer import HighwayNetworkLayer
+from bidaf.layers.highway_network_layer import HighwayNetworkLayer
 
 
 class TestHighwayNetwork(unittest.TestCase):

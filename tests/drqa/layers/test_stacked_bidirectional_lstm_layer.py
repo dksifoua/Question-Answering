@@ -1,6 +1,6 @@
 import torch
 import unittest
-from qa.drqa.layers import StackedBiLSTMsLayer
+from drqa.layers import StackedBiLSTMsLayer
 
 
 class TestStackedBiLSTMsLayer(unittest.TestCase):

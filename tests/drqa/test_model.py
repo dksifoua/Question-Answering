@@ -2,7 +2,8 @@ import unittest
 
 import torch
 
-from qa.drqa.model import DrQA
+from drqa.model import DrQA
+from qa.domain import DrQATensorDatasetBatch
 
 
 class TestModel(unittest.TestCase):
@@ -28,16 +29,23 @@ class TestModel(unittest.TestCase):
 
     def test_forward(self):
         batch_size, ctx_seq_len, qst_seq_len = 64, 50, 20
-        start_scores, end_scores = self.drqa_model(
-            context_sequence=torch.randint(low=1, high=ctx_seq_len + 1, size=(batch_size, ctx_seq_len)),
-            context_lengths=torch.randint(low=1, high=ctx_seq_len + 1, size=(batch_size,)),
-            question_sequence=torch.randint(low=1, high=qst_seq_len + 1, size=(batch_size, qst_seq_len)),
-            question_lengths=torch.randint(low=1, high=qst_seq_len + 1, size=(batch_size,)),
-            exact_matches=torch.randint(low=1, high=ctx_seq_len + 1, size=(batch_size, ctx_seq_len)),
-            part_of_speeches=torch.randint(low=1, high=ctx_seq_len + 1, size=(batch_size, ctx_seq_len)),
-            named_entity_types=torch.randint(low=1, high=ctx_seq_len + 1, size=(batch_size, ctx_seq_len)),
-            normalized_term_frequencies=torch.randn(size=(batch_size, ctx_seq_len))
+        batch = DrQATensorDatasetBatch(
+            id_=None,
+            context=(
+                torch.randint(low=1, high=ctx_seq_len + 1, size=(batch_size, ctx_seq_len)),
+                torch.randint(low=1, high=ctx_seq_len + 1, size=(batch_size,))
+            ),
+            question=(
+                torch.randint(low=1, high=qst_seq_len + 1, size=(batch_size, qst_seq_len)),
+                torch.randint(low=1, high=qst_seq_len + 1, size=(batch_size,))
+            ),
+            target=None,
+            exact_match=torch.randint(low=1, high=ctx_seq_len + 1, size=(batch_size, ctx_seq_len)),
+            part_of_speech=torch.randint(low=1, high=ctx_seq_len + 1, size=(batch_size, ctx_seq_len)),
+            named_entity_type=torch.randint(low=1, high=ctx_seq_len + 1, size=(batch_size, ctx_seq_len)),
+            normalized_term_frequency=torch.randn(size=(batch_size, ctx_seq_len))
         )
+        start_scores, end_scores = self.drqa_model(batch)
         self.assertEqual(start_scores.size(), torch.Size([batch_size, ctx_seq_len]))
         self.assertEqual(end_scores.size(), torch.Size([batch_size, ctx_seq_len]))
 

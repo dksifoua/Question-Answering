@@ -4,9 +4,9 @@ import torch
 import torch.nn as nn
 from torch import Tensor
 
-from ..base_model import BaseModel
+from qa.base_model import BaseModel
+from qa.domain import DrQATensorDatasetBatch
 from .layers import AlignedQuestionEmbeddingLayer, BiLinearAttentionLayer, StackedBiLSTMsLayer, QuestionEncodingLayer
-from ..domain import DrQATensorDatasetBatch
 
 
 class DrQA(BaseModel):

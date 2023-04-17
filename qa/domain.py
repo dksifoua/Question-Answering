@@ -1,5 +1,5 @@
 import dataclasses
-from typing import List, Tuple, Union
+from typing import List, Optional, Tuple, Union
 
 import torch
 from spacy.tokens import Doc
@@ -43,17 +43,20 @@ class DrQARawDatasetItem(RawDatasetItem):
 
 @dataclasses.dataclass
 class DrQATensorDatasetItem(_UnpackingDataClassMixin):
-    id_: torch.LongTensor
+    id_: Optional[torch.LongTensor]
     context: Union[torch.LongTensor, Tuple[torch.LongTensor, torch.LongTensor]]
     question: Union[torch.LongTensor, Tuple[torch.LongTensor, torch.LongTensor]]
-    target: torch.LongTensor
+    target: Optional[torch.LongTensor]
     exact_match: torch.LongTensor
     part_of_speech: torch.LongTensor
     named_entity_type: torch.LongTensor
     normalized_term_frequency: torch.FloatTensor
 
 
-DrQATensorDatasetBatch = DrQATensorDatasetItem
+@dataclasses.dataclass
+class DrQATensorDatasetBatch(DrQATensorDatasetItem):
+    pass
+
 
 __all__ = [
     "Target",
@@ -63,3 +66,7 @@ __all__ = [
     "DrQATensorDatasetItem",
     "DrQATensorDatasetBatch"
 ]
+
+if __name__ == "__main__":
+    target = Target(start_index=1, end_index=4)
+
